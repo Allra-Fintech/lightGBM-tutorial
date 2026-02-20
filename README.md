@@ -116,6 +116,19 @@ python lightgbm_ads_tutorial.py
 
 ```
 lightgbm/
-└── lightgbm_ads_tutorial.ipynb   # Main notebook
+├── lightgbm_ads_tutorial.ipynb   # Main notebook
+├── given_words.json              # 50 e-commerce seed / query terms
+├── keywords.json                 # 1,000 e-commerce ad keywords (20 categories)
+├── .gitignore                    # Excludes .ipynb_checkpoints/
 └── README.md                     # This file
 ```
+
+### Vocabulary files
+
+| File | Count | Description |
+|---|---|---|
+| `given_words.json` | 50 | Broad seed terms: `phone`, `laptop`, `yoga`, `camping`, etc. |
+| `keywords.json` | 1,000 | Specific ad keywords across 20 e-commerce categories |
+
+**Categories covered in `keywords.json`:**
+electronics, fashion, footwear, watches, headphones, cameras, home & furniture, skincare, vitamins & supplements, running & fitness, yoga, gaming, coffee, baby, pets, jewelry, luggage & travel, desk & office, makeup, perfume, sunglasses, backpacks, wallets, rings, necklaces, shirts, pants, jackets, sneakers, boots, handbags, mattresses, blenders, vacuums, printers, monitors, keyboards, protein & supplements, cycling, camping, guitars, books, toys, candles, plants, gifts, fishing
