@@ -116,14 +116,7 @@ python lightgbm_ads_tutorial.py
 
 ```
 lightgbm/
-├── src/
-│   ├── __init__.py       # Package marker
-│   ├── dataset.py        # make_ads_dataset(), load_vocab()
-│   ├── models.py         # prepare_features(), train_ctr_model(),
-│   │                     # train_conversion_model(), train_ranker(),
-│   │                     # feature_importance()
-│   └── ranking.py        # rank_keywords_for_given()
-├── lightgbm_ads_tutorial.ipynb   # Thin orchestration notebook
+├── lightgbm_ads_tutorial.ipynb   # Main notebook
 ├── given_words.json              # 50 e-commerce seed / query terms
 ├── keywords.json                 # 1,000 e-commerce ad keywords (20 categories)
 ├── .gitignore                    # Excludes .ipynb_checkpoints/
