@@ -90,6 +90,14 @@ Install:
 pip install lightgbm scikit-learn pandas numpy
 ```
 
+**macOS only:** LightGBM requires OpenMP, which is not bundled with the pip package. Install it via Homebrew before running:
+
+```bash
+brew install libomp
+```
+
+Then restart the notebook kernel after installing.
+
 ## How to run
 
 **Option 1 — Jupyter (recommended)**
