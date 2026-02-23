@@ -13,6 +13,7 @@ End-to-end LightGBM tutorial for keyword-ads performance prediction, using a syn
 | 5 | Keyword ranking | Score-based ranking using both models combined |
 | 6 | LambdaMART | `LGBMRanker` with proper group-based train/test split, NDCG@k |
 | 7 | Feature importance | Gain-based importance for all three models |
+| 8 | Real similarity | Compute per-keyword similarity with `sentence-transformers` |
 
 ## Dataset schema
 
@@ -99,8 +100,30 @@ Swap this formula for ROAS, profit, or any other business metric.
 
 - **Objective:** `lambdarank`
 - **Eval metric:** NDCG@3, NDCG@5, NDCG@10
-- **Relevance label:** `ctr` (swap for ROAS / conversions in production)
+- **Relevance label:** `ctr` binned into integer grades 0–4 (swap for ROAS / conversions in production)
 - **Split strategy:** group-based — all rows sharing a `given_word` stay in the same split (required for correct NDCG evaluation)
+
+### Real Similarity (section 8)
+
+`similarity` is the most important feature in the model. In production it should come from a real embedding model, not a random or hardcoded value.
+
+```python
+from sentence_transformers import SentenceTransformer
+from sklearn.metrics.pairwise import cosine_similarity
+
+model = SentenceTransformer("all-MiniLM-L6-v2")  # downloads ~80MB on first run
+
+def compute_similarities(given_word, keywords):
+    vecs   = model.encode([given_word] + keywords, normalize_embeddings=True)
+    scores = cosine_similarity(vecs[0:1], vecs[1:])[0]
+    return dict(zip(keywords, scores.tolist()))
+```
+
+| Model | Quality | Speed | Cost |
+|---|---|---|---|
+| `all-MiniLM-L6-v2` | Good | Fast, local | Free |
+| `text-embedding-3-small` | Great | API call | OpenAI pricing |
+| `word2vec` / `GloVe` | OK | Very fast, local | Free |
 
 ## Choosing the right setup
 
@@ -119,11 +142,12 @@ Swap this formula for ROAS, profit, or any other business metric.
 - scikit-learn
 - pandas
 - numpy
+- sentence-transformers *(section 8 only)*
 
 Install:
 
 ```bash
-pip install lightgbm scikit-learn pandas numpy
+pip install lightgbm scikit-learn pandas numpy sentence-transformers
 ```
 
 **macOS only:** LightGBM requires OpenMP, which is not bundled with the pip package. Install it via Homebrew before running:
