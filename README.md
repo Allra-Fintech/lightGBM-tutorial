@@ -102,21 +102,9 @@ Swap this formula for ROAS, profit, or any other business metric.
 - **Relevance label:** `ctr` binned into integer grades 0–4 (swap for ROAS / conversions in production)
 - **Split strategy:** group-based — all rows sharing a `given_word` stay in the same split (required for correct NDCG evaluation)
 
-### Real Similarity (section 8)
+### Real Similarity
 
-`similarity` is the most important feature in the model. In production it should come from a real embedding model, not a random or hardcoded value.
-
-```python
-from sentence_transformers import SentenceTransformer
-from sklearn.metrics.pairwise import cosine_similarity
-
-model = SentenceTransformer("all-MiniLM-L6-v2")  # downloads ~80MB on first run
-
-def compute_similarities(given_word, keywords):
-    vecs   = model.encode([given_word] + keywords, normalize_embeddings=True)
-    scores = cosine_similarity(vecs[0:1], vecs[1:])[0]
-    return dict(zip(keywords, scores.tolist()))
-```
+`similarity` is the most important feature in the model. It is computed in section 1 using `sentence-transformers` — cosine similarity between embeddings of `given_word` and each `keyword`.
 
 | Model | Quality | Speed | Cost |
 |---|---|---|---|
@@ -126,13 +114,15 @@ def compute_similarities(given_word, keywords):
 
 ## Choosing the right setup
 
-| Success metric | Target variable | LightGBM objective | Eval metric |
-|---|---|---|---|
-| CTR | `ctr` (float) | `regression` | RMSE / MAE |
-| Conversion | `has_conversion` (0/1) | `binary` | AUC / PR-AUC |
-| ROAS / Profit | continuous value | `regression` or `tweedie` | RMSE |
-| Click volume | `clicks` (count) | `poisson` | — |
-| Keyword ranking | any relevance label | `lambdarank` | NDCG@k |
+Rows marked ✅ are implemented in this notebook; rows marked 📖 are for reference only.
+
+| | Success metric | Target variable | LightGBM objective | Eval metric |
+|---|---|---|---|---|
+| ✅ | CTR | `ctr` (float) | `regression` | RMSE / MAE |
+| ✅ | Conversion | `has_conversion` (0/1) | `binary` | AUC / PR-AUC |
+| ✅ | Keyword ranking | any relevance label | `lambdarank` | NDCG@k |
+| 📖 | ROAS / Profit | continuous value | `regression` or `tweedie` | RMSE |
+| 📖 | Click volume | `clicks` (count) | `poisson` | — |
 
 ## Requirements
 
@@ -141,7 +131,7 @@ def compute_similarities(given_word, keywords):
 - scikit-learn
 - pandas
 - numpy
-- sentence-transformers *(section 8 only)*
+- sentence-transformers
 
 Install:
 
