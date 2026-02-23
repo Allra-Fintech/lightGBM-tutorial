@@ -13,7 +13,6 @@ End-to-end LightGBM tutorial for keyword-ads performance prediction, using a syn
 | 5 | Keyword ranking | Score-based ranking using both models combined |
 | 6 | LambdaMART | `LGBMRanker` with proper group-based train/test split, NDCG@k |
 | 7 | Feature importance | Gain-based importance for all three models |
-| 8 | Real similarity | Compute per-keyword similarity with `sentence-transformers` |
 
 ## Dataset schema
 
