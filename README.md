@@ -43,11 +43,47 @@ Each row is one `(given_word, keyword)` observation.
 - **Key detail:** samples are weighted by `impressions` so high-traffic rows carry more influence
 - **Eval metric:** RMSE
 
+#### LGBMRegressor parameters
+
+| Parameter | Value | Description |
+|---|---|---|
+| `n_estimators` | 2000 | Max number of trees to build. Early stopping will cut this short if validation score stops improving. |
+| `learning_rate` | 0.03 | How much each tree corrects the previous ones. Lower = more careful, requires more trees. |
+| `num_leaves` | 63 | Max leaves per tree. Controls model complexity — higher = more complex. |
+| `subsample` | 0.8 | Use 80% of rows randomly per tree. Reduces overfitting. |
+| `colsample_bytree` | 0.8 | Use 80% of features randomly per tree. Reduces overfitting. |
+| `random_state` | 42 | Fixed seed for reproducibility. |
+| `verbose` | -1 | Suppress all training logs. |
+
+Reference: [LGBMRegressor API](https://lightgbm.readthedocs.io/en/latest/pythonapi/lightgbm.LGBMRegressor.html) · [Full parameter list](https://lightgbm.readthedocs.io/en/latest/Parameters.html)
+
 ### Model B — Conversion Classification
 
 - **Objective:** `binary`
 - **Target:** `has_conversion` (0 or 1)
 - **Eval metrics:** AUC, PR-AUC
+
+#### LGBMClassifier parameters
+
+| Parameter | Value | Description |
+|---|---|---|
+| `n_estimators` | 3000 | More trees than the regressor — classification benefits from extra iterations. |
+| `learning_rate` | 0.03 | Same as regressor. |
+| `num_leaves` | 63 | Same as regressor. |
+| `subsample` | 0.8 | Same as regressor. |
+| `colsample_bytree` | 0.8 | Same as regressor. |
+| `random_state` | 42 | Same as regressor. |
+| `verbose` | -1 | Same as regressor. |
+
+#### Regressor vs Classifier
+
+| | `LGBMRegressor` | `LGBMClassifier` |
+|---|---|---|
+| Task | Predict a continuous number (CTR) | Predict a probability (conversion) |
+| Output | `.predict()` → float | `.predict_proba()` → 0–1 probability |
+| Default objective | `regression` (L2 loss) | `binary` (log loss) |
+
+Reference: [LGBMClassifier API](https://lightgbm.readthedocs.io/en/latest/pythonapi/lightgbm.LGBMClassifier.html) · [Full parameter list](https://lightgbm.readthedocs.io/en/latest/Parameters.html)
 
 ### Keyword Ranking (score-based)
 
